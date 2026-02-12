@@ -1,0 +1,65 @@
+.sky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(180deg, #4da6ff 0%, #87CEEB 70%, #ffffff 100%);
+    z-index: -1;
+    overflow: hidden;
+    image-rendering: pixelated;
+}
+
+.cloud {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    left: -200px;
+    /* Start off screen */
+    background: #ffffff;
+
+    /* Using box-shadow for pixel art clouds */
+    box-shadow:
+        12px 0 #ffffff,
+        -12px 0 #ffffff,
+        0 -12px #ffffff,
+        0 12px #ffffff,
+        24px 0 #ffffff,
+        -24px 0 #ffffff,
+        12px -12px #ffffff,
+        12px 12px #ffffff,
+        -12px -12px #ffffff,
+        -12px 12px #ffffff,
+        36px 0 #ffffff,
+        -36px 0 #ffffff,
+        /* More details */
+        24px -12px #ffffff,
+        24px 12px #ffffff;
+
+    opacity: 0.95;
+    animation: drift linear infinite;
+}
+
+div.small {
+    transform: scale(3);
+    opacity: 0.8;
+}
+
+div.medium {
+    transform: scale(5);
+    opacity: 0.9;
+}
+
+div.large {
+    transform: scale(7);
+}
+
+@keyframes drift {
+    from {
+        left: -300px;
+    }
+
+    to {
+        left: 110vw;
+    }
+}
