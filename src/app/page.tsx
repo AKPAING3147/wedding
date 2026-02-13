@@ -6,8 +6,8 @@ import Image from "next/image";
 import { supabase } from "@/lib/supabaseClient";
 import PixelGallery from "@/components/PixelGallery";
 import RPGDialog from "@/components/RPGDialog";
-import FlowerSelector from "@/components/FlowerSelector";
-import PixelGarden from "@/components/PixelGarden";
+// import FlowerSelector from "@/components/FlowerSelector";
+// import PixelGarden from "@/components/PixelGarden";
 import CoupleStory from "@/components/CoupleStory";
 import WeddingLocation from "@/components/WeddingLocation";
 import PixelFooter from "@/components/PixelFooter";
@@ -21,10 +21,10 @@ export default function Home() {
   // Guestbook State
   const [flyingMessages, setFlyingMessages] = useState<{ id: number, name: string, message: string, left: number, color: string }[]>([]);
   const [showCupids, setShowCupids] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [newMessage, setNewMessage] = useState("");
-  const [selectedFlower, setSelectedFlower] = useState("rose");
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  // const [newName, setNewName] = useState("");
+  // const [newMessage, setNewMessage] = useState("");
+  // const [selectedFlower, setSelectedFlower] = useState("rose");
+  // const [isSubmitted, setIsSubmitted] = useState(false);
 
 
   // Subscribe to Realtime Wishes
@@ -62,25 +62,11 @@ export default function Home() {
     }, 10000);
   };
 
-  const handleMessageSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newName.trim() || !newMessage.trim()) return;
-
-    // Send to Supabase
-    const { error } = await supabase
-      .from('wishes')
-      .insert([{ name: newName, message: newMessage, avatar_id: selectedFlower }]);
-
-    if (error) {
-      console.error('Error sending wish:', error);
-      // Fallback: Show locally if offline/error
-      triggerFlyingMessage(newName, newMessage);
-    }
-
-    setNewName("");
-    setNewMessage("");
-    setIsSubmitted(true);
-  };
+  /*
+    const handleMessageSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+    };
+    */
 
 
 
@@ -246,6 +232,24 @@ export default function Home() {
       `}</style>
 
 
+
+      {/* Fixed background */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundImage: "url('/background.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          imageRendering: "pixelated",
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
+      />
 
       {/* Balloon Container - moves with scroll via JS transform */}
       <div
@@ -558,151 +562,7 @@ export default function Home() {
 
           <WeddingLocation />
 
-          {/* GARDEN GUESTBOOK FORM */}
-          <div style={{
-            marginTop: "40px",
-            backgroundColor: "rgba(255, 255, 255, 0.95)",
-            border: "8px solid #27ae60", // Green border
-            borderRadius: "20px",
-            boxShadow: "8px 8px 0 rgba(0,0,0,0.2)",
-            padding: "40px",
-            pointerEvents: "auto",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: "90%",
-            maxWidth: "600px",
-            marginLeft: "auto",
-            marginRight: "auto",
-            position: "relative",
-            zIndex: 30
-          }}>
-            {!isSubmitted ? (
-              <>
-                <h2 style={{
-                  fontFamily: "'Press Start 2P', system-ui",
-                  marginBottom: "20px",
-                  fontSize: "1.2rem",
-                  textAlign: "center",
-                  lineHeight: "1.5",
-                  color: "#27ae60",
-                  textShadow: "2px 2px 0 #cef"
-                }}>
-                  PLANT A WISH
-                </h2>
 
-                <p style={{ fontFamily: "'Courier New', monospace", textAlign: "center", marginBottom: "20px", fontSize: "0.9rem" }}>
-                  Leave a message and plant a flower in our garden!
-                </p>
-
-                <form onSubmit={handleMessageSubmit} style={{ width: "100%", display: "flex", flexDirection: "column", gap: "15px" }}>
-                  <input
-                    type="text"
-                    placeholder="YOUR NAME"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                    style={{
-                      padding: "15px",
-                      fontFamily: "'Courier New', monospace",
-                      fontSize: "1rem",
-                      border: "2px solid #27ae60",
-                      outline: "none",
-                      borderRadius: "10px"
-                    }}
-                  />
-                  <textarea
-                    placeholder="YOUR WISH..."
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    rows={4}
-                    style={{
-                      padding: "15px",
-                      fontFamily: "'Courier New', monospace",
-                      fontSize: "1rem",
-                      border: "2px solid #27ae60",
-                      outline: "none",
-                      resize: "none",
-                      borderRadius: "10px"
-                    }}
-                  />
-
-                  <div style={{ textAlign: "center", marginTop: "10px" }}>
-                    <label style={{ fontFamily: "'Courier New', monospace", fontWeight: "bold", display: "block", marginBottom: "10px", color: "#27ae60" }}>PICK A FLOWER:</label>
-                    <FlowerSelector selectedFlower={selectedFlower} onSelect={setSelectedFlower} />
-                  </div>
-
-                  <button
-                    type="submit"
-                    style={{
-                      padding: "15px",
-                      backgroundColor: "#27ae60",
-                      color: "white",
-                      fontFamily: "'Press Start 2P', system-ui",
-                      fontSize: "1rem",
-                      border: "none",
-                      cursor: "pointer",
-                      boxShadow: "0 6px 0 #1e8449",
-                      borderRadius: "10px",
-                      marginTop: "10px",
-                      transition: "transform 0.1s"
-                    }}
-                    onMouseDown={(e) => e.currentTarget.style.transform = "translateY(4px)"}
-                    onMouseUp={(e) => e.currentTarget.style.transform = "translateY(0)"}
-                  >
-                    PLANT FLOWER 🌻
-                  </button>
-                </form>
-              </>
-            ) : (
-              <div style={{ textAlign: "center", animation: "flyInLeft 0.5s ease-out" }}>
-                <h2 style={{
-                  fontFamily: "'Press Start 2P', system-ui",
-                  marginBottom: "20px",
-                  fontSize: "1.5rem",
-                  color: "#27ae60",
-                  textShadow: "2px 2px 0 #cef"
-                }}>
-                  THANK YOU! 🌻
-                </h2>
-                <p style={{ fontFamily: "'Courier New', monospace", marginBottom: "30px", fontSize: "1.1rem" }}>
-                  Your flower has been planted in the garden.
-                </p>
-                <button
-                  onClick={() => setIsSubmitted(false)}
-                  style={{
-                    padding: "15px",
-                    backgroundColor: "#f1c40f",
-                    color: "white",
-                    fontFamily: "'Press Start 2P', system-ui",
-                    fontSize: "0.9rem",
-                    border: "none",
-                    cursor: "pointer",
-                    boxShadow: "0 6px 0 #d35400",
-                    borderRadius: "10px",
-                    transition: "transform 0.1s"
-                  }}
-                  onMouseDown={(e) => e.currentTarget.style.transform = "translateY(4px)"}
-                  onMouseUp={(e) => e.currentTarget.style.transform = "translateY(0)"}
-                >
-                  PLANT ANOTHER
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* PIXEL GARDEN DISPLAY */}
-          <div style={{
-            pointerEvents: "auto",
-            width: "90%",
-            maxWidth: "600px",
-            marginLeft: "auto",
-            marginRight: "auto",
-            marginTop: "40px",
-            marginBottom: "100px" // Space between garden and footer
-          }}>
-            {/* The PixelGarden component has its own 'grass' background so we can put it directly below or overlapping */}
-            <PixelGarden />
-          </div>
 
 
 
