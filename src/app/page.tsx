@@ -10,7 +10,7 @@ import RPGDialog from "@/components/RPGDialog";
 // import PixelGarden from "@/components/PixelGarden";
 import CoupleStory from "@/components/CoupleStory";
 import WeddingLocation from "@/components/WeddingLocation";
-import PixelFooter from "@/components/PixelFooter";
+
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -124,25 +124,31 @@ export default function Home() {
           // 1. Move Y down with scroll (parallax effect).
           // Cap it so it doesn't fly off the bottom.
           // Cap the movement so it lands nicely
-          // We want it to stop say 350px from the bottom (approx balloon size + footer)
-          const endY = window.innerHeight - 350;
+          // We want it to stop say 300px from the bottom (approx balloon size + footer)
+          const endY = window.innerHeight - 300;
           const moveY = Math.min(scrollTop * 0.15, endY);
 
-          // 2. Move X to the right to clear center text
-          // Progress: 0 to 1 over 800px of scroll
-          const progress = Math.min(scrollTop / 800, 1);
-          // Zig-Zag Path (Left -> Right -> Left)
-          // Start moving left/right only after passing the countdown (approx 400px scroll)
-          // Smoothly transition from center (-50%) to swaying
-          const swayStart = 400;
-          const swayIntensity = Math.min(Math.max((scrollTop - swayStart) / 200, 0), 1);
+
+          // 2. Move X - Swaying logic
+          // Swings left/right but should return to center upon reaching bottom
+          const maxScroll = container.scrollHeight - container.clientHeight;
+          const scrollProgress = scrollTop / maxScroll; // 0 to 1
+
+          // Sway intensity starts at 0, ramps up, then ramps down at end
+          let swayIntensity = Math.min((scrollTop - 400) / 200, 1);
+          if (swayIntensity < 0) swayIntensity = 0;
+
+          // Decay sway as we approach footer (last 20% of scroll)
+          if (scrollProgress > 0.8) {
+            const decay = (scrollProgress - 0.8) * 5; // 0 to 1
+            swayIntensity *= (1 - decay);
+          }
 
           const sway = Math.sin(scrollTop / 350) * 45 * swayIntensity;
           const moveXPercent = -50 + sway;
 
-
           // 3. Scale down slightly to simulate distance
-          const scale = 1 - (progress * 0.3); // 1.0 -> 0.7
+          const scale = 1 - (Math.min(scrollTop / 800, 1) * 0.3);
 
           balloon.style.transform = `translate(${moveXPercent}%, ${moveY}px) scale(${scale})`;
           ticking = false;
@@ -164,7 +170,8 @@ export default function Home() {
         overflowY: "auto",
         overflowX: "hidden", // Prevent horizontal scroll
         position: "relative",
-        scrollBehavior: "smooth"
+        scrollBehavior: "smooth",
+        paddingBottom: "0px"
       }}
     >
       {/* Animation keyframes & Font */}
@@ -256,7 +263,7 @@ export default function Home() {
         ref={balloonRef}
         style={{
           position: "fixed",
-          top: "0vh", // Initial position
+          top: "-10vh", // Initial position
           left: "50%",
           // Custom transform managed by JS scroll handler
           transform: "translate(-50%, 0px)",
@@ -273,7 +280,7 @@ export default function Home() {
           }}
         >
           <Image
-            src="/8.svg"
+            src="/B2.svg"
             alt="Pixel Balloon"
             width={0}
             height={0}
@@ -564,18 +571,18 @@ export default function Home() {
 
           {/* KPAY GIFT SECTION */}
           <div style={{
-            marginTop: "40px",
+            marginTop: "20px",
             backgroundColor: "rgba(255, 255, 255, 0.95)",
-            border: "8px solid #FF8C00", // Retro Orange border
-            borderRadius: "20px",
-            boxShadow: "8px 8px 0 rgba(0,0,0,0.2)",
-            padding: "40px",
+            border: "4px solid #2c3e50", // Dark blue border
+            borderRadius: "12px",
+            boxShadow: "6px 6px 0 rgba(44, 62, 80, 0.3)",
+            padding: "30px",
             pointerEvents: "auto",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             width: "90%",
-            maxWidth: "600px",
+            maxWidth: "500px", // Slightly smaller
             marginLeft: "auto",
             marginRight: "auto",
             position: "relative",
@@ -583,31 +590,37 @@ export default function Home() {
           }}>
             <h2 style={{
               fontFamily: "'Press Start 2P', system-ui",
-              marginBottom: "20px",
-              fontSize: "1.2rem",
+              marginBottom: "15px",
+              fontSize: "1.1rem",
               textAlign: "center",
               lineHeight: "1.5",
-              color: "#FF8C00",
-              textShadow: "2px 2px 0 #000"
+              color: "#2c3e50",
+              textShadow: "2px 2px 0 #bdc3c7"
             }}>
               WEDDING GIFT
             </h2>
 
-            <p style={{ fontFamily: "'Courier New', monospace", textAlign: "center", marginBottom: "20px", fontSize: "0.9rem" }}>
+            <p style={{
+              fontFamily: "'Courier New', monospace",
+              textAlign: "center",
+              marginBottom: "20px",
+              fontSize: "0.9rem",
+              color: "#2c3e50"
+            }}>
               Scan to contribute via KPay
             </p>
 
             <div style={{
-              border: "4px solid #333",
-              padding: "10px",
+              border: "2px solid #2c3e50",
+              padding: "8px",
               backgroundColor: "white",
-              boxShadow: "4px 4px 0 rgba(0,0,0,0.1)"
+              boxShadow: "4px 4px 0 rgba(44, 62, 80, 0.1)"
             }}>
               <Image
                 src="/kpay.jpg"
                 alt="KBZ Pay"
-                width={200}
-                height={200}
+                width={180}
+                height={180}
                 style={{
                   imageRendering: "pixelated",
                   objectFit: "contain"
@@ -622,6 +635,72 @@ export default function Home() {
 
 
 
+          {/* THANK YOU SECTION */}
+          <div style={{
+            marginTop: "30px",
+            marginBottom: "30px",
+            textAlign: "center",
+            padding: "20px",
+            backgroundColor: "#fff",
+            border: "4px solid #000",
+            boxShadow: "8px 8px 0px #000",
+            maxWidth: "600px",
+            width: "90%",
+            marginLeft: "auto",
+            marginRight: "auto",
+            position: "relative",
+            imageRendering: "pixelated"
+          }}>
+            <div style={{ marginBottom: "15px", display: "flex", justifyContent: "center" }}>
+              <Image
+                src="/great.gif"
+                alt="Great"
+                width={100}
+                height={100}
+                style={{ imageRendering: "pixelated" }}
+              />
+            </div>
+            <h2 style={{
+              fontFamily: "'Press Start 2P', system-ui",
+              fontSize: "1.2rem",
+              marginBottom: "15px",
+              color: "#333",
+              lineHeight: "1.5"
+            }}>
+              THANK YOU!
+            </h2>
+            <p style={{
+              fontFamily: "'Padauk', sans-serif", // Changed font for Myanmar support
+              fontSize: "1rem", // Adjusted size for readability
+              fontWeight: "bold",
+              color: "#FFD700", // Gold/Yellow
+              lineHeight: "1.6",
+              textShadow: "2px 2px 0 #000", // Black shadow for contrast
+              marginTop: "10px"
+            }}>
+              မင်္ဂလာပွဲအားကြွရောက်ပေးတဲ့အတွက်အထူးကျေးဇူးတင်ပါသည်
+            </p>
+
+          </div>
+
+
+
+
+          <div style={{ height: "200px" }}></div>
+
+          {/* FOOTER IMAGE */}
+          <div style={{
+            width: "100%",
+            marginTop: "50px",
+            position: "relative",
+            minHeight: "400px",
+            backgroundImage: "url('/green.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            borderTop: "8px solid #000",
+            imageRendering: "pixelated"
+          }}>
+          </div>
         </div>
       </div>
 
@@ -636,7 +715,7 @@ export default function Home() {
 
 
 
-      <PixelFooter />
+
 
       {/* FLYING MESSAGES CONTAINER */}
       <div style={{
