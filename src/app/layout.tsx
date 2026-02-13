@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 // import { Press_Start_2P } from "next/font/google"; // Next.js font optimization not working in this environment for some reason?
 import "@fontsource/press-start-2p"; // Using direct import instead
 import "./globals.css";
@@ -8,6 +8,13 @@ import MusicPlayer from "@/components/MusicPlayer";
 export const metadata: Metadata = {
   title: "Pixel Wedding",
   description: "A pixel art themed wedding website",
+};
+
+export const viewport: Viewport = {
+  width: 1280,
+  initialScale: 0.3, // Start zoomed out to fit content
+  maximumScale: 5,   // Allow users to zoom in
+  userScalable: true,
 };
 
 export default function RootLayout({
