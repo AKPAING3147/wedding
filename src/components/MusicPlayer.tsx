@@ -55,7 +55,7 @@ export default function MusicPlayer() {
             gap: "10px",
         }}>
             <ReactHowler
-                src="/bgm.mp3"
+                src="/bg.mp3"
                 playing={playing}
                 loop={true}
                 volume={0.5}
