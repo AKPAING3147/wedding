@@ -616,59 +616,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* KPAY GIFT SECTION */}
-          <div style={{
-            marginTop: "40px",
-            backgroundColor: "rgba(255, 255, 255, 0.95)",
-            border: "8px solid #FF8C00", // Retro Orange border
-            borderRadius: "20px",
-            boxShadow: "8px 8px 0 rgba(0,0,0,0.2)",
-            padding: "40px",
-            pointerEvents: "auto",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: "90%",
-            maxWidth: "600px",
-            marginLeft: "auto",
-            marginRight: "auto",
-            position: "relative",
-            zIndex: 30
-          }}>
-            <h2 style={{
-              fontFamily: "'Press Start 2P', system-ui",
-              marginBottom: "20px",
-              fontSize: "1.2rem",
-              textAlign: "center",
-              lineHeight: "1.5",
-              color: "#FF8C00",
-              textShadow: "2px 2px 0 #000"
-            }}>
-              WEDDING GIFT
-            </h2>
 
-            <p style={{ fontFamily: "'Courier New', monospace", textAlign: "center", marginBottom: "20px", fontSize: "0.9rem" }}>
-              Scan to contribute via KPay
-            </p>
-
-            <div style={{
-              border: "4px solid #333",
-              padding: "10px",
-              backgroundColor: "white",
-              boxShadow: "4px 4px 0 rgba(0,0,0,0.1)"
-            }}>
-              <Image
-                src="/kpay.jpg"
-                alt="KBZ Pay"
-                width={200}
-                height={200}
-                style={{
-                  imageRendering: "pixelated",
-                  objectFit: "contain"
-                }}
-              />
-            </div>
-          </div>
 
 
 
