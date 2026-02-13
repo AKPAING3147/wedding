@@ -5,6 +5,12 @@ import Image from "next/image";
 
 import { supabase } from "@/lib/supabaseClient";
 import PixelGallery from "@/components/PixelGallery";
+import RPGDialog from "@/components/RPGDialog";
+import FlowerSelector from "@/components/FlowerSelector";
+import PixelGarden from "@/components/PixelGarden";
+import CoupleStory from "@/components/CoupleStory";
+import WeddingLocation from "@/components/WeddingLocation";
+import PixelFooter from "@/components/PixelFooter";
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -17,6 +23,9 @@ export default function Home() {
   const [showCupids, setShowCupids] = useState(false);
   const [newName, setNewName] = useState("");
   const [newMessage, setNewMessage] = useState("");
+  const [selectedFlower, setSelectedFlower] = useState("rose");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
 
   // Subscribe to Realtime Wishes
   useEffect(() => {
@@ -60,7 +69,7 @@ export default function Home() {
     // Send to Supabase
     const { error } = await supabase
       .from('wishes')
-      .insert([{ name: newName, message: newMessage }]);
+      .insert([{ name: newName, message: newMessage, avatar_id: selectedFlower }]);
 
     if (error) {
       console.error('Error sending wish:', error);
@@ -70,7 +79,10 @@ export default function Home() {
 
     setNewName("");
     setNewMessage("");
+    setIsSubmitted(true);
   };
+
+
 
   useEffect(() => {
     // Set target date
@@ -122,13 +134,31 @@ export default function Home() {
             setShowCupids(false);
           }
 
-          // Calculate movement: 
-          // Move 0px at start, but cap it so it "lands" or stays in view
-          // 0.4 factor makes it move 1px for every 2.5px scrolled
-          const maxMove = window.innerHeight * 0.65; // Stop at ~65% down the screen
-          const moveY = Math.min(scrollTop * 0.4, maxMove);
+          // Calculate movement:
+          // 1. Move Y down with scroll (parallax effect).
+          // Cap it so it doesn't fly off the bottom.
+          // Cap the movement so it lands nicely
+          // We want it to stop say 350px from the bottom (approx balloon size + footer)
+          const endY = window.innerHeight - 350;
+          const moveY = Math.min(scrollTop * 0.15, endY);
 
-          balloon.style.transform = `translate(-50%, ${moveY}px)`;
+          // 2. Move X to the right to clear center text
+          // Progress: 0 to 1 over 800px of scroll
+          const progress = Math.min(scrollTop / 800, 1);
+          // Zig-Zag Path (Left -> Right -> Left)
+          // Start moving left/right only after passing the countdown (approx 400px scroll)
+          // Smoothly transition from center (-50%) to swaying
+          const swayStart = 400;
+          const swayIntensity = Math.min(Math.max((scrollTop - swayStart) / 200, 0), 1);
+
+          const sway = Math.sin(scrollTop / 350) * 45 * swayIntensity;
+          const moveXPercent = -50 + sway;
+
+
+          // 3. Scale down slightly to simulate distance
+          const scale = 1 - (progress * 0.3); // 1.0 -> 0.7
+
+          balloon.style.transform = `translate(${moveXPercent}%, ${moveY}px) scale(${scale})`;
           ticking = false;
         });
         ticking = true;
@@ -146,6 +176,7 @@ export default function Home() {
         width: "100%",
         height: "100vh",
         overflowY: "auto",
+        overflowX: "hidden", // Prevent horizontal scroll
         position: "relative",
         scrollBehavior: "smooth"
       }}
@@ -239,12 +270,12 @@ export default function Home() {
           position: "fixed",
           top: "0vh", // Initial position
           left: "50%",
-          // Base transform is translateX(-50%). 
-          // JS will overwrite 'transform', so we must include translateX(-50%) in the JS update or wrapper.
+          // Custom transform managed by JS scroll handler
           transform: "translate(-50%, 0px)",
-          zIndex: 10,
+          zIndex: 200, // Fly above
           pointerEvents: "none",
           willChange: "transform", // Hint for browser optimization
+          transition: "transform 0.1s linear" // Smooth out JS updates slightly
         }}
       >
         {/* Inner div for floating animations (independent of scroll transform) */}
@@ -274,8 +305,8 @@ export default function Home() {
       {/* Save The Date & Details - Scrolls with page */}
       <div
         style={{
-          position: "absolute",
-          top: "30vh", // Positioned below initial balloon view
+          position: "relative",
+          marginTop: "30vh", // Positioned below initial balloon view
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 20, // High z-index to stay on top
@@ -436,11 +467,11 @@ export default function Home() {
 
           <PixelGallery />
 
-          {/* Glass Content Layer - Naturally flows after gallery */}
+
           <div
             style={{
-              marginTop: "150px", // Margin between Gallery and Card
-              marginBottom: "100px",
+              marginTop: "150px", // Increased spacing
+              marginBottom: "80px",
               width: "90%",
               maxWidth: "600px",
               position: "relative",
@@ -450,10 +481,9 @@ export default function Home() {
           >
             {/* Actual Glass Card */}
             <div style={{
-              backgroundColor: "rgba(255, 255, 255, 0.4)", // Slightly more opaque
-              backdropFilter: "blur(12px)",
-              border: "4px solid rgba(255, 255, 255, 0.6)",
-              boxShadow: "8px 8px 0px rgba(0, 0, 0, 0.15)",
+              backgroundColor: "rgba(255, 255, 255, 0.9)", // Solid background
+              border: "4px solid rgba(0, 0, 0, 0.8)", // Stronger border for pixel look
+              boxShadow: "8px 8px 0px rgba(0, 0, 0, 0.3)",
               padding: "30px",
               imageRendering: "pixelated",
               textAlign: "center",
@@ -536,6 +566,162 @@ export default function Home() {
             </div>
           </div>
 
+          <div style={{ marginTop: "100px", width: "100%", display: "flex", justifyContent: "center", position: "relative", zIndex: 20 }}>
+            <RPGDialog />
+          </div>
+
+          <CoupleStory />
+
+          <WeddingLocation />
+
+          {/* GARDEN GUESTBOOK FORM */}
+          <div style={{
+            marginTop: "40px",
+            backgroundColor: "rgba(255, 255, 255, 0.95)",
+            border: "8px solid #27ae60", // Green border
+            borderRadius: "20px",
+            boxShadow: "8px 8px 0 rgba(0,0,0,0.2)",
+            padding: "40px",
+            pointerEvents: "auto",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "90%",
+            maxWidth: "600px",
+            marginLeft: "auto",
+            marginRight: "auto",
+            position: "relative",
+            zIndex: 30
+          }}>
+            {!isSubmitted ? (
+              <>
+                <h2 style={{
+                  fontFamily: "'Press Start 2P', system-ui",
+                  marginBottom: "20px",
+                  fontSize: "1.2rem",
+                  textAlign: "center",
+                  lineHeight: "1.5",
+                  color: "#27ae60",
+                  textShadow: "2px 2px 0 #cef"
+                }}>
+                  PLANT A WISH
+                </h2>
+
+                <p style={{ fontFamily: "'Courier New', monospace", textAlign: "center", marginBottom: "20px", fontSize: "0.9rem" }}>
+                  Leave a message and plant a flower in our garden!
+                </p>
+
+                <form onSubmit={handleMessageSubmit} style={{ width: "100%", display: "flex", flexDirection: "column", gap: "15px" }}>
+                  <input
+                    type="text"
+                    placeholder="YOUR NAME"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    style={{
+                      padding: "15px",
+                      fontFamily: "'Courier New', monospace",
+                      fontSize: "1rem",
+                      border: "2px solid #27ae60",
+                      outline: "none",
+                      borderRadius: "10px"
+                    }}
+                  />
+                  <textarea
+                    placeholder="YOUR WISH..."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    rows={4}
+                    style={{
+                      padding: "15px",
+                      fontFamily: "'Courier New', monospace",
+                      fontSize: "1rem",
+                      border: "2px solid #27ae60",
+                      outline: "none",
+                      resize: "none",
+                      borderRadius: "10px"
+                    }}
+                  />
+
+                  <div style={{ textAlign: "center", marginTop: "10px" }}>
+                    <label style={{ fontFamily: "'Courier New', monospace", fontWeight: "bold", display: "block", marginBottom: "10px", color: "#27ae60" }}>PICK A FLOWER:</label>
+                    <FlowerSelector selectedFlower={selectedFlower} onSelect={setSelectedFlower} />
+                  </div>
+
+                  <button
+                    type="submit"
+                    style={{
+                      padding: "15px",
+                      backgroundColor: "#27ae60",
+                      color: "white",
+                      fontFamily: "'Press Start 2P', system-ui",
+                      fontSize: "1rem",
+                      border: "none",
+                      cursor: "pointer",
+                      boxShadow: "0 6px 0 #1e8449",
+                      borderRadius: "10px",
+                      marginTop: "10px",
+                      transition: "transform 0.1s"
+                    }}
+                    onMouseDown={(e) => e.currentTarget.style.transform = "translateY(4px)"}
+                    onMouseUp={(e) => e.currentTarget.style.transform = "translateY(0)"}
+                  >
+                    PLANT FLOWER 🌻
+                  </button>
+                </form>
+              </>
+            ) : (
+              <div style={{ textAlign: "center", animation: "flyInLeft 0.5s ease-out" }}>
+                <h2 style={{
+                  fontFamily: "'Press Start 2P', system-ui",
+                  marginBottom: "20px",
+                  fontSize: "1.5rem",
+                  color: "#27ae60",
+                  textShadow: "2px 2px 0 #cef"
+                }}>
+                  THANK YOU! 🌻
+                </h2>
+                <p style={{ fontFamily: "'Courier New', monospace", marginBottom: "30px", fontSize: "1.1rem" }}>
+                  Your flower has been planted in the garden.
+                </p>
+                <button
+                  onClick={() => setIsSubmitted(false)}
+                  style={{
+                    padding: "15px",
+                    backgroundColor: "#f1c40f",
+                    color: "white",
+                    fontFamily: "'Press Start 2P', system-ui",
+                    fontSize: "0.9rem",
+                    border: "none",
+                    cursor: "pointer",
+                    boxShadow: "0 6px 0 #d35400",
+                    borderRadius: "10px",
+                    transition: "transform 0.1s"
+                  }}
+                  onMouseDown={(e) => e.currentTarget.style.transform = "translateY(4px)"}
+                  onMouseUp={(e) => e.currentTarget.style.transform = "translateY(0)"}
+                >
+                  PLANT ANOTHER
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* PIXEL GARDEN DISPLAY */}
+          <div style={{
+            pointerEvents: "auto",
+            width: "90%",
+            maxWidth: "600px",
+            marginLeft: "auto",
+            marginRight: "auto",
+            marginTop: "40px",
+            marginBottom: "100px" // Space between garden and footer
+          }}>
+            {/* The PixelGarden component has its own 'grass' background so we can put it directly below or overlapping */}
+            <PixelGarden />
+          </div>
+
+
+
         </div>
       </div>
 
@@ -550,8 +736,7 @@ export default function Home() {
 
 
 
-      {/* Scroll Spacer - 400vh tall */}
-      <div style={{ height: "600vh", width: "100%" }}></div>
+      <PixelFooter />
 
       {/* FLYING MESSAGES CONTAINER */}
       <div style={{

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "@fontsource/press-start-2p"; // Using direct import instead
 import "./globals.css";
 import LoadingScreen from "@/components/LoadingScreen";
+import MusicPlayer from "@/components/MusicPlayer";
 
 export const metadata: Metadata = {
   title: "Pixel Wedding",
@@ -16,8 +17,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body style={{ fontFamily: '"Press Start 2P", system-ui' }}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet" />
+      </head>
+      <body style={{ fontFamily: '"Press Start 2P", "Padauk", system-ui' }}>
         <LoadingScreen />
+        <MusicPlayer />
         {children}
       </body>
     </html>
