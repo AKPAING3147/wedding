@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  width: 1280,
-  initialScale: 0.3, // Start zoomed out to fit content
-  maximumScale: 5,   // Allow users to zoom in
+  width: 1024,
+  // initialScale: 0.3, // Removed to let browser handle scaling
+  maximumScale: 5,
   userScalable: true,
 };
 
