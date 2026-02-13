@@ -54,20 +54,39 @@ export default function CoupleStory() {
             marginTop: "30px",
             marginBottom: "30px" // Space before garden
         }}>
-            <h2 style={{
-                fontFamily: "'Press Start 2P', system-ui",
-                textAlign: "center",
-                color: "#2c3e50",
-                fontSize: "1.2rem",
-                marginBottom: "20px",
-                textShadow: "2px 2px 0 #bdc3c7"
-            }}>OUR STORY</h2>
+            <div style={{
+                backgroundColor: "#f1c40f", // Gold/Yellow color
+                border: "4px solid #d35400",
+                boxShadow: "6px 6px 0 #c0392b",
+                padding: "15px 30px",
+                borderRadius: "10px",
+                display: "inline-block", // Make it fit the text
+                marginBottom: "30px",
+                position: "relative"
+            }}>
+                {/* Decorative Corner Pixels */}
+                <div style={{ position: "absolute", top: "-4px", left: "-4px", width: "8px", height: "8px", backgroundColor: "#d35400" }} />
+                <div style={{ position: "absolute", top: "-4px", right: "-4px", width: "8px", height: "8px", backgroundColor: "#d35400" }} />
+                <div style={{ position: "absolute", bottom: "-4px", left: "-4px", width: "8px", height: "8px", backgroundColor: "#d35400" }} />
+                <div style={{ position: "absolute", bottom: "-4px", right: "-4px", width: "8px", height: "8px", backgroundColor: "#d35400" }} />
 
-            {stories.map((story, index) => {
-                return (
-                    <StoryItem key={index} story={story} index={index} />
-                );
-            })}
+                <h2 style={{
+                    fontFamily: "'Press Start 2P', system-ui",
+                    textAlign: "center",
+                    color: "#2c3e50",
+                    fontSize: "1.2rem",
+                    margin: 0,
+                    textShadow: "2px 2px 0 #ecf0f1"
+                }}>OUR STORY</h2>
+            </div>
+
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "30px", alignItems: "center" }}>
+                {stories.map((story, index) => {
+                    return (
+                        <StoryItem key={index} story={story} index={index} />
+                    );
+                })}
+            </div>
         </div>
     );
 }

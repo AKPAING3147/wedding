@@ -1,19 +1,45 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function WeddingLocation() {
+    const ref = useRef<HTMLDivElement>(null);
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                    observer.disconnect(); // Animate once
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        if (ref.current) {
+            observer.observe(ref.current);
+        }
+
+        return () => observer.disconnect();
+    }, []);
+
     return (
-        <div style={{
-            width: "100%",
-            maxWidth: "800px",
-            margin: "0 auto",
-            marginBottom: "40px",
-            padding: "20px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            position: "relative"
-        }}>
+        <div
+            ref={ref}
+            style={{
+                width: "100%",
+                maxWidth: "800px",
+                margin: "0 auto",
+                marginBottom: "40px",
+                padding: "20px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                position: "relative",
+                transform: isVisible ? "translateY(0) scale(1)" : "translateY(50px) scale(0.9)",
+                opacity: isVisible ? 1 : 0,
+                transition: "transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease-out"
+            }}>
 
             {/* Container "Map Scroll" look */}
             <div style={{

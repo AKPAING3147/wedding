@@ -15,7 +15,13 @@ import WeddingLocation from "@/components/WeddingLocation";
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
   const balloonRef = useRef<HTMLDivElement>(null);
+  const weddingCardRef = useRef<HTMLDivElement>(null);
+  const weddingGiftRef = useRef<HTMLDivElement>(null);
+  const thankYouRef = useRef<HTMLDivElement>(null);
   const [showCircles, setShowCircles] = useState(false);
+  const [showWeddingCard, setShowWeddingCard] = useState(false);
+  const [showWeddingGift, setShowWeddingGift] = useState(false);
+  const [showThankYou, setShowThankYou] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   // Guestbook State
@@ -125,10 +131,7 @@ export default function Home() {
           // Cap it so it doesn't fly off the bottom.
           // Cap the movement so it lands nicely
           // We want it to stop say 300px from the bottom (approx balloon size + footer)
-          const endY = window.innerHeight - 300;
-          const moveY = Math.min(scrollTop * 0.15, endY);
-
-
+          // Calculate movement moved down
           // 2. Move X - Swaying logic
           // Swings left/right but should return to center upon reaching bottom
           const maxScroll = container.scrollHeight - container.clientHeight;
@@ -138,11 +141,63 @@ export default function Home() {
           let swayIntensity = Math.min((scrollTop - 400) / 200, 1);
           if (swayIntensity < 0) swayIntensity = 0;
 
-          // Decay sway as we approach footer (last 20% of scroll)
-          if (scrollProgress > 0.8) {
+          // Calculate limit based on wedding card position
+          const weddingCard = weddingCardRef.current;
+          let limitY = window.innerHeight - 300; // Default fallback
+          const balloonHeight = balloon.offsetHeight || 300;
+
+          if (weddingCard) {
+            const cardRect = weddingCard.getBoundingClientRect();
+            // We want balloon bottom to sit on card top
+            // Balloon Top (viewport) = -10vh + moveY
+            // Balloon Bottom (viewport) = -10vh + moveY + balloonHeight
+            // Card Top (viewport) = cardRect.top
+
+            // So: -10vh + moveY + balloonHeight <= cardRect.top
+            // moveY <= cardRect.top - balloonHeight + 10vh
+            // Note: 10vh is approx window.innerHeight * 0.1
+            const vhOffset = window.innerHeight * 0.1;
+            limitY = cardRect.top - balloonHeight + vhOffset - 20; // -20 for slight overlap/padding
+
+            // Animate card in when it comes into view
+            if (cardRect.top < window.innerHeight * 0.85) {
+              setShowWeddingCard(true);
+            }
+          }
+
+          // Wedding Gift Animation
+          const weddingGift = weddingGiftRef.current;
+          if (weddingGift) {
+            const giftRect = weddingGift.getBoundingClientRect();
+            if (giftRect.top < window.innerHeight * 0.85) {
+              setShowWeddingGift(true);
+            }
+          }
+
+          // Thank You Animation
+          const thankYou = thankYouRef.current;
+          if (thankYou) {
+            const thankRect = thankYou.getBoundingClientRect();
+            if (thankRect.top < window.innerHeight * 0.85) {
+              setShowThankYou(true);
+            }
+          }
+
+          // Sway decay when close to landing
+          // We can approximate "close" using the limitY vs current expected parallax
+          // But looking at scrollProgress is safer for now or just letting it land.
+          const currentY = scrollTop * 0.15;
+          const isLanded = currentY >= limitY;
+
+          if (isLanded) {
+            swayIntensity = 0;
+          } else if (scrollProgress > 0.8) {
             const decay = (scrollProgress - 0.8) * 5; // 0 to 1
             swayIntensity *= (1 - decay);
           }
+
+          // Apply transform
+          const moveY = Math.min(scrollTop * 0.15, limitY);
 
           const sway = Math.sin(scrollTop / 350) * 45 * swayIntensity;
           const moveXPercent = -50 + sway;
@@ -212,6 +267,7 @@ export default function Home() {
           top: 0px; /* Moved up */
           width: 200px;
           height: 200px;
+          /* Animation is handled by JS for entrance, but we can add float here if we want continuous movement */
           animation: balloonFloat 3s ease-in-out infinite;
         }
         .cupid-left {
@@ -307,6 +363,7 @@ export default function Home() {
           zIndex: 20, // High z-index to stay on top
           textAlign: "center",
           width: "100%",
+          maxWidth: "1280px", // Limit max width for large screens
           pointerEvents: "none",
         }}
       >
@@ -464,6 +521,7 @@ export default function Home() {
 
 
           <div
+            ref={weddingCardRef}
             style={{
               marginTop: "150px", // Increased spacing
               marginBottom: "80px",
@@ -472,6 +530,9 @@ export default function Home() {
               position: "relative",
               zIndex: 15,
               pointerEvents: "auto",
+              transform: showWeddingCard ? "scale(1) translateY(0)" : "scale(0.8) translateY(100px)",
+              opacity: showWeddingCard ? 1 : 0,
+              transition: "transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease-out",
             }}
           >
             {/* Actual Glass Card */}
@@ -540,7 +601,14 @@ export default function Home() {
             {/* CUPIDS (Animated) */}
             <div style={{ position: "relative", height: "0", zIndex: 20 }}>
               {/* Left Cupid */}
-              <div className="cupid-container cupid-left">
+              <div
+                className="cupid-container cupid-left"
+                style={{
+                  opacity: showWeddingCard ? 1 : 0,
+                  transform: showWeddingCard ? "translateX(0) rotate(-10deg)" : "translateX(-100px) rotate(-10deg)",
+                  transition: "transform 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s, opacity 1s ease-out 0.5s"
+                }}
+              >
                 <Image
                   src="/cupid.svg"
                   alt="Cupid"
@@ -550,13 +618,52 @@ export default function Home() {
               </div>
 
               {/* Right Cupid */}
-              <div className="cupid-container cupid-right">
+              <div
+                className="cupid-container cupid-right"
+                style={{
+                  opacity: showWeddingCard ? 1 : 0,
+                  transform: showWeddingCard ? "translateX(0) rotate(10deg)" : "translateX(100px) rotate(10deg)",
+                  transition: "transform 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s, opacity 1s ease-out 0.5s"
+                }}
+              >
                 <Image
                   src="/cupid.svg"
                   alt="Cupid"
                   fill
                   style={{ objectFit: "contain", imageRendering: "pixelated", filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.2))", transform: "scaleX(-1)" }}
                 />
+              </div>
+
+              {/* Zaw And Thar Text */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "100px", // Moved further down to 100px
+                  left: "50%",
+                  transform: showWeddingCard ? "translateX(-50%) scale(1)" : "translateX(-50%) scale(0)",
+                  opacity: showWeddingCard ? 1 : 0,
+                  transition: "transform 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.7s, opacity 1s ease-out 0.7s",
+                  zIndex: 25,
+                  textAlign: "center",
+                  width: "100%",
+                  pointerEvents: "none"
+                }}
+              >
+                <h2 style={{
+                  fontFamily: "'Press Start 2P', system-ui",
+                  fontSize: "1.2rem",
+                  color: "#FF69B4", // Hot Pink
+                  textShadow: "3px 3px 0 #fff, 0 0 10px rgba(255,105,180,0.5)",
+                  lineHeight: "1.5",
+                  margin: 0,
+                  backgroundColor: "rgba(255,255,255,0.8)",
+                  padding: "10px",
+                  borderRadius: "10px",
+                  display: "inline-block",
+                  border: "2px solid #333"
+                }}>
+                  Zaw <span style={{ color: "#FF8C00", fontSize: "0.8em" }}>&</span> Thar
+                </h2>
               </div>
             </div>
           </div>
@@ -570,24 +677,29 @@ export default function Home() {
           <WeddingLocation />
 
           {/* KPAY GIFT SECTION */}
-          <div style={{
-            marginTop: "20px",
-            backgroundColor: "rgba(255, 255, 255, 0.95)",
-            border: "4px solid #2c3e50", // Dark blue border
-            borderRadius: "12px",
-            boxShadow: "6px 6px 0 rgba(44, 62, 80, 0.3)",
-            padding: "30px",
-            pointerEvents: "auto",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: "90%",
-            maxWidth: "500px", // Slightly smaller
-            marginLeft: "auto",
-            marginRight: "auto",
-            position: "relative",
-            zIndex: 30
-          }}>
+          <div
+            ref={weddingGiftRef}
+            style={{
+              marginTop: "20px",
+              backgroundColor: "rgba(255, 255, 255, 0.95)",
+              border: "4px solid #2c3e50", // Dark blue border
+              borderRadius: "12px",
+              boxShadow: "6px 6px 0 rgba(44, 62, 80, 0.3)",
+              padding: "30px",
+              pointerEvents: "auto",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "90%",
+              maxWidth: "500px", // Slightly smaller
+              marginLeft: "auto",
+              marginRight: "auto",
+              position: "relative",
+              zIndex: 30,
+              transform: showWeddingGift ? "scale(1) translateY(0)" : "scale(0.8) translateY(100px)",
+              opacity: showWeddingGift ? 1 : 0,
+              transition: "transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease-out"
+            }}>
             <h2 style={{
               fontFamily: "'Press Start 2P', system-ui",
               marginBottom: "15px",
@@ -636,21 +748,26 @@ export default function Home() {
 
 
           {/* THANK YOU SECTION */}
-          <div style={{
-            marginTop: "30px",
-            marginBottom: "30px",
-            textAlign: "center",
-            padding: "20px",
-            backgroundColor: "#fff",
-            border: "4px solid #000",
-            boxShadow: "8px 8px 0px #000",
-            maxWidth: "600px",
-            width: "90%",
-            marginLeft: "auto",
-            marginRight: "auto",
-            position: "relative",
-            imageRendering: "pixelated"
-          }}>
+          <div
+            ref={thankYouRef}
+            style={{
+              marginTop: "30px",
+              marginBottom: "30px",
+              textAlign: "center",
+              padding: "20px",
+              backgroundColor: "#fff",
+              border: "4px solid #000",
+              boxShadow: "8px 8px 0px #000",
+              maxWidth: "600px",
+              width: "90%",
+              marginLeft: "auto",
+              marginRight: "auto",
+              position: "relative",
+              imageRendering: "pixelated",
+              transform: showThankYou ? "scale(1) translateY(0)" : "scale(0.8) translateY(100px)",
+              opacity: showThankYou ? 1 : 0,
+              transition: "transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease-out"
+            }}>
             <div style={{ marginBottom: "15px", display: "flex", justifyContent: "center" }}>
               <Image
                 src="/great.gif"
