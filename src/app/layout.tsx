@@ -10,12 +10,7 @@ export const metadata: Metadata = {
   description: "A pixel art themed wedding website",
 };
 
-export const viewport: Viewport = {
-  width: 1180,
-  // initialScale: 0.3, // Removed to let browser handle scaling
-  maximumScale: 5,
-  userScalable: true,
-};
+// Viewport removed to revert to old version
 
 export default function RootLayout({
   children,
