@@ -245,23 +245,7 @@ export default function Home() {
         }
       `}</style>
 
-      {/* Fixed background */}
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          backgroundImage: "url('/background.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          imageRendering: "pixelated",
-          zIndex: 0,
-          pointerEvents: "none",
-        }}
-      />
+
 
       {/* Balloon Container - moves with scroll via JS transform */}
       <div
