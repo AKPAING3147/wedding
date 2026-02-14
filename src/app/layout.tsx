@@ -6,8 +6,8 @@ import LoadingScreen from "@/components/LoadingScreen";
 
 
 export const metadata: Metadata = {
-  title: "Pixel Wedding",
-  description: "A pixel art themed wedding website",
+  title: "Zaw And Thar",
+  description: "Zaw and Thar wedding website",
 };
 
 // Viewport removed to revert to old version
@@ -23,6 +23,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet" />
+        <link rel="icon" href="/pixel-logo.svg" />
       </head>
       <body style={{ fontFamily: '"Press Start 2P", "Padauk", system-ui' }}>
         <LoadingScreen />

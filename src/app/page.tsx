@@ -917,23 +917,34 @@ export default function Home() {
           <div
             ref={thankYouRef}
             style={{
-              marginTop: "30px",
-              marginBottom: "30px",
+              marginTop: "50px",
+              marginBottom: "50px",
               textAlign: "center",
-              padding: "20px",
-              backgroundColor: "#fff",
-              border: "4px solid #000",
-              boxShadow: "8px 8px 0px #000",
+              padding: "40px",
+              background: "rgba(255, 255, 255, 0.85)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              border: "2px solid #fff",
+              borderRadius: "24px",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.5)",
               maxWidth: "600px",
               width: "90%",
               marginLeft: "auto",
               marginRight: "auto",
               position: "relative",
-              imageRendering: "pixelated",
-              transform: showThankYou ? "scale(1) translateY(0)" : "scale(0.8) translateY(100px)",
+              transform: showThankYou ? "scale(1) translateY(0)" : "scale(0.9) translateY(40px)",
               opacity: showThankYou ? 1 : 0,
-              transition: "transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease-out"
+              transition: "transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease-out",
+              overflow: "hidden"
             }}>
+            {/* Background decoration */}
+            <div style={{
+              position: "absolute",
+              top: "-50%", left: "-50%", width: "200%", height: "200%",
+              background: "radial-gradient(circle at 50% 50%, rgba(255,192,203,0.15), transparent 60%)",
+              zIndex: -1,
+              pointerEvents: "none"
+            }} />
 
             <div style={{ marginBottom: "15px", display: "flex", justifyContent: "center" }}>
               <Image
@@ -946,30 +957,26 @@ export default function Home() {
             </div>
             <h2 style={{
               fontFamily: "'Press Start 2P', system-ui",
-              fontSize: "1.2rem",
+              fontSize: "1.5rem",
               marginBottom: "15px",
-              color: "#333",
-              lineHeight: "1.5"
+              background: "linear-gradient(45deg, #FF1493, #FF69B4)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              lineHeight: "1.5",
+              filter: "drop-shadow(2px 2px 0px rgba(0,0,0,0.1))"
             }}>
               THANK YOU!
             </h2>
             <p style={{
-              fontFamily: "'Padauk', sans-serif", // Changed font for Myanmar support
-              fontSize: "1rem", // Adjusted size for readability
-              fontWeight: "bold",
-              color: "#FFD700", // Gold/Yellow
-              lineHeight: "1.6",
-              textShadow: "2px 2px 0 #000", // Black shadow for contrast
+              fontFamily: "'Padauk', sans-serif",
+              fontSize: "1.1rem",
+              fontWeight: "600",
+              color: "#444",
+              lineHeight: "1.8",
               marginTop: "10px"
             }}>
               မင်္ဂလာပွဲအားကြွရောက်ပေးတဲ့အတွက်အထူးကျေးဇူးတင်ပါသည်
             </p>
-
-            <div style={{ marginTop: "25px" }}>
-              <button onClick={handleSendLove} className="pixel-btn">
-                SEND LOVE ❤️
-              </button>
-            </div>
 
           </div>
 
