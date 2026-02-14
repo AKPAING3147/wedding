@@ -777,36 +777,39 @@ export default function Home() {
 
 
               {/* GROOM SECTION */}
-              <h2 style={{ fontSize: "1.2rem", fontWeight: "bold", borderBottom: "2px solid #333", display: "inline-block", paddingBottom: "4px", marginBottom: "16px" }}>THE GROOM</h2>
+              <h2 style={{ fontSize: "1.2rem", fontWeight: "bold", borderBottom: "2px solid #333", display: "inline-block", paddingBottom: "4px", marginBottom: "16px", fontFamily: "'Padauk', sans-serif" }}>သတို့သား</h2>
 
-              <p style={{ fontSize: "0.9rem", lineHeight: "1.6", marginBottom: "8px" }}>
+              <p style={{ fontSize: "0.9rem", lineHeight: "1.6", marginBottom: "8px", fontFamily: "'Padauk', sans-serif" }}>
                 မန္တလေးတိုင်းဒေသကြီး၊ ချမ်းအေးသာစံမြို့နယ်၊ ပြည်ကြီးပျော်ဘွယ်အနောက်ရပ်ကွက်နေ<br />
-                Dr. Kyaw Zin Lin + Dr. Thiri Hla Myint တို့၏မောင်၊ Ko Nay Min Tun + Ma Su Pann Ei တို့၏အစ်ကို၊ U Aung Khaing + Daw Hnin Hnin Oo တို့၏သား
+                ဒေါက်တာ ကျော်ဇင်လင်း + ဒေါက်တာ သီရိလှမြင့် တို့၏မောင်၊<br />
+                ကိုနေမင်းထွန်း + မစု ပန်းအိ တို့၏အစ်ကို၊<br />
+                ဦးအောင်ခိုင် + ဒေါ်နှင်းနှင်းဦး တို့၏သား
               </p>
 
-              <h1 style={{ fontSize: "1.8rem", fontWeight: "bold", color: "#000", margin: "12px 0", textShadow: "2px 2px 0px rgba(255,255,255,0.5)" }}>
-                Zaw Ye Chan
+              <h1 style={{ fontSize: "1.8rem", fontWeight: "bold", color: "#000", margin: "12px 0", textShadow: "2px 2px 0px rgba(255,255,255,0.5)", fontFamily: "'Padauk', sans-serif" }}>
+                ဇော်ရဲချမ်း
               </h1>
 
-              <p style={{ fontSize: "0.9rem", fontWeight: "bold", marginBottom: "24px" }}>
+              <p style={{ fontSize: "0.9rem", fontWeight: "bold", marginBottom: "24px", fontFamily: "'Padauk', sans-serif" }}>
                 B.A (Economics)<br />
                 (Shwe Mandalay Trading)
               </p>
 
               {/* BRIDE SECTION */}
-              <h2 style={{ fontSize: "1.2rem", fontWeight: "bold", borderBottom: "2px solid #333", display: "inline-block", paddingBottom: "4px", marginBottom: "16px" }}>THE BRIDE</h2>
+              <h2 style={{ fontSize: "1.2rem", fontWeight: "bold", borderBottom: "2px solid #333", display: "inline-block", paddingBottom: "4px", marginBottom: "16px", fontFamily: "'Padauk', sans-serif" }}>သတို့သမီး</h2>
 
-              <p style={{ fontSize: "0.9rem", lineHeight: "1.6", marginBottom: "8px" }}>
-                မန္တလေးတိုင်းဒေသကြီး၊ တံတားဦးမြို့၊ ရေလည်ရပ်နေ<br />
-                U Win Htike + Daw Sandar Moe တို့၏မြေး၊ Ko Pyae Phyo Aung, B.A (English) + Ma Khin Yadanar May, B.Sc (Zoology) တို့၏ညီမ၊<br />
-                တံတားဦးမြို့ အိမ်သစ်တန်းရပ်နေ U Soe Min + Daw Thazin Aye တို့၏သမီး
+              <p style={{ fontSize: "0.9rem", lineHeight: "1.6", marginBottom: "8px", fontFamily: "'Padauk', sans-serif" }}>
+                မန္တလေးတိုင်းဒေသကြီး၊ တံတားဦးမြို့၊ ရေလည်ရပ်ကွက်နေ<br />
+                ဦးဝင်းထိုက် + ဒေါ်စန္ဒာမိုး တို့၏မြေး၊<br />
+                ကိုပြည့်ဖြိုးအောင် B.A (English) + မခင်ရတနာမေ B.Sc (Zoology) တို့၏ညီမ၊<br />
+                တံတားဦးမြို့ အိမ်သစ်တန်းရပ်ကွက်နေ ဦးစိုးမင်း + ဒေါ်သဇင်အေး တို့၏သမီး
               </p>
 
-              <h1 style={{ fontSize: "1.8rem", fontWeight: "bold", color: "#000", margin: "12px 0", textShadow: "2px 2px 0px rgba(255,255,255,0.5)" }}>
-                Thar Nwe Yi
+              <h1 style={{ fontSize: "1.8rem", fontWeight: "bold", color: "#000", margin: "12px 0", textShadow: "2px 2px 0px rgba(255,255,255,0.5)", fontFamily: "'Padauk', sans-serif" }}>
+                သာနွယ်ရီ
               </h1>
 
-              <p style={{ fontSize: "0.85rem", fontWeight: "bold", marginBottom: "24px", lineHeight: "1.4" }}>
+              <p style={{ fontSize: "0.85rem", fontWeight: "bold", marginBottom: "24px", lineHeight: "1.4", fontFamily: "'Padauk', sans-serif" }}>
                 B.A (Geography)<br />
                 Founder of Golden Star Education Center<br />
                 Diploma in English (MUFL)<br />
@@ -816,8 +819,8 @@ export default function Home() {
 
               {/* INVITATION */}
               <div style={{ borderTop: "2px dashed #999", paddingTop: "20px", marginTop: "20px" }}>
-                <p style={{ fontSize: "1rem", fontWeight: "bold", color: "#555" }}>
-                  တို့၏ 'မင်္ဂလာပွဲ' သို့ ကြွရောက်ပေးပါရန်<br />
+                <p style={{ fontSize: "1rem", fontWeight: "bold", color: "#555", fontFamily: "'Padauk', sans-serif" }}>
+                  တို့၏ မင်္ဂလာပွဲ သို့ ကြွရောက်ချီးမြှင့်ပေးပါရန်<br />
                   ခင်မင်ရင်းနှီးစွာဖြင့် ဖိတ်ကြားအပ်ပါသည်။
                 </p>
               </div>
@@ -1123,9 +1126,15 @@ export default function Home() {
         >
           မင်္ဂလာပွဲလိပ်စာကြည့်ရန်
         </div>
-        <svg width="34" height="34" viewBox="0 0 24 24" fill="#ec008c" xmlns="http://www.w3.org/2000/svg" style={{ imageRendering: "pixelated" }}>
-          <path d="M10 2H14V4H16V6H18V10H16V12H14V14H12V16H14V18H12V22H10V16H8V14H6V12H4V10H6V6H8V4H10V2ZM10 6H8V10H10V6ZM14 6H12V10H14V6Z" />
-        </svg>
+        <div style={{ width: "40px", height: "40px", position: "relative" }}>
+          <Image
+            src="/location.gif"
+            alt="Location"
+            fill
+            style={{ objectFit: "contain", imageRendering: "pixelated" }}
+            unoptimized
+          />
+        </div>
       </div>
 
 
@@ -1152,10 +1161,15 @@ export default function Home() {
         >
           မင်္ဂလာလက်ဖွဲ့ပေးရန်
         </div>
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="#E91E63" xmlns="http://www.w3.org/2000/svg" style={{ imageRendering: "pixelated" }}>
-          <path d="M4 4H10V6H4V4ZM14 4H20V6H14V4ZM4 8H20V10H4V8ZM4 12H20V20H4V12ZM11 12H13V20H11V12ZM6 12H9V14H6V12ZM15 12H18V14H15V12Z" />
-          <path d="M8 2H10V4H8V2ZM14 2H16V4H14V2Z" />
-        </svg>
+        <div style={{ width: "40px", height: "40px", position: "relative" }}>
+          <Image
+            src="/gift.gif"
+            alt="Gift"
+            fill
+            style={{ objectFit: "contain", imageRendering: "pixelated" }}
+            unoptimized
+          />
+        </div>
       </div>
 
 
