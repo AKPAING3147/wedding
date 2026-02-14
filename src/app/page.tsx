@@ -9,7 +9,9 @@ import RPGDialog from "@/components/RPGDialog";
 // import FlowerSelector from "@/components/FlowerSelector";
 // import PixelGarden from "@/components/PixelGarden";
 import CoupleStory from "@/components/CoupleStory";
-import WeddingLocation from "@/components/WeddingLocation";
+import LocationModal from "@/components/LocationModal";
+import GiftModal from "@/components/GiftModal";
+
 
 
 export default function Home() {
@@ -22,6 +24,13 @@ export default function Home() {
   const [showWeddingCard, setShowWeddingCard] = useState(false);
   const [showWeddingGift, setShowWeddingGift] = useState(false);
   const [showThankYou, setShowThankYou] = useState(false);
+
+
+
+  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [showGiftModal, setShowGiftModal] = useState(false);
+  const [showLocationIcon, setShowLocationIcon] = useState(false);
+  const [showLocationTooltip, setShowLocationTooltip] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   // Guestbook State
@@ -68,6 +77,12 @@ export default function Home() {
     }, 10000);
   };
 
+  const handleSendLove = () => {
+    const messages = ["Success!", "Happy Wedding!", "Congrats!", "Cheers!", "Best Wishes!", "So Happy!", "Good Luck!"];
+    const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+    triggerFlyingMessage("Friend", randomMsg);
+  };
+
   /*
     const handleMessageSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -112,6 +127,13 @@ export default function Home() {
         window.requestAnimationFrame(() => {
           const scrollTop = container.scrollTop;
 
+          // Show Location Icon when scrolled down > 100px
+          if (scrollTop > 100) {
+            setShowLocationIcon(true);
+          } else {
+            setShowLocationIcon(false);
+          }
+
           // Animate circles when scrolling down a bit (e.g., > 100px)
           if (scrollTop > 100) {
             setShowCircles(true);
@@ -124,6 +146,15 @@ export default function Home() {
             setShowCupids(true);
           } else {
             setShowCupids(false);
+          }
+
+          // Show tooltip only when near bottom (footer)
+          // Threshold: document height - window height - 200px (approx footer height trigger)
+          const isNearBottom = scrollTop + window.innerHeight >= container.scrollHeight - 400;
+          if (isNearBottom) {
+            setShowLocationTooltip(true);
+          } else {
+            setShowLocationTooltip(false);
           }
 
           // Calculate movement:
@@ -292,6 +323,200 @@ export default function Home() {
             right: -10px;
           }
         }
+
+        .content-responsive {
+          margin-top: 45vh; /* Desktop default */
+        }
+        @media (max-width: 768px) {
+          .content-responsive {
+            margin-top: 32vh; /* Reduced for mobile */
+          }
+        }
+
+        .pixel-btn {
+          background-color: #FF69B4;
+          border: none;
+          color: white;
+          padding: 10px 20px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 14px;
+          margin: 10px 2px;
+          cursor: pointer;
+          font-family: 'Press Start 2P', cursive;
+          box-shadow: 4px 4px 0px #C71585;
+          transition: all 0.1s;
+          position: relative;
+          text-transform: uppercase;
+        }
+        .pixel-btn:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: 6px 6px 0px #C71585;
+          background-color: #FF1493;
+        }
+        .pixel-btn:active {
+          transform: translate(2px, 2px);
+          box-shadow: 0px 0px 0px #C71585;
+        }
+
+        .kpay-card {
+            transition: transform 0.3s ease;
+        }
+        .kpay-card:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+
+
+        
+        .location-hint {
+          position: absolute;
+          bottom: 75px;
+          background: #fff;
+          color: #000;
+          padding: 8px 12px;
+          border: 4px solid #000;
+          font-family: 'Courier New', Courier, monospace; 
+          font-weight: bold;
+          font-size: 0.8rem;
+          white-space: nowrap;
+          box-shadow: 6px 6px 0px rgba(0,0,0,0.4);
+          pointer-events: none;
+          z-index: 1001;
+          display: block;
+        }
+        /* Pixel arrow */
+        .location-hint::after {
+           content: "";
+           position: absolute;
+           bottom: -9px;
+           left: 50%;
+           transform: translateX(-50%);
+           width: 0;
+           height: 0;
+           border-left: 8px solid transparent;
+           border-right: 8px solid transparent;
+           border-top: 8px solid #000;
+           z-index: -1;
+        }
+        .location-hint::before {
+           content: "";
+           position: absolute;
+           bottom: -5px;
+           left: 50%;
+           transform: translateX(-50%);
+           width: 0; 
+           height: 0; 
+           border-left: 5px solid transparent;
+           border-right: 5px solid transparent;
+           border-top: 5px solid #fff;
+           z-index: 0;
+        }
+
+        .location-icon-btn {
+          width: 60px;
+          height: 60px;
+          background-color: #fff;
+          box-shadow: 4px 4px 0px #000;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          position: fixed;
+          bottom: 20px;
+          left: 20px;
+          transition: all 0.1s;
+          pointer-events: auto;
+          border: 4px solid #000;
+          z-index: 1000;
+        }
+        .location-icon-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000;
+            background-color: #f0f0f0;
+        }
+        .location-icon-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000;
+        }
+
+
+        .gift-icon-btn {
+          width: 60px;
+          height: 60px;
+          background-color: #fff;
+          box-shadow: 4px 4px 0px #000;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          transition: all 0.1s;
+          pointer-events: auto;
+          border: 4px solid #000;
+          z-index: 1000;
+        }
+        .gift-icon-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000;
+            background-color: #f0f0f0;
+        }
+        .gift-icon-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000;
+        }
+
+        .gift-hint {
+          position: absolute;
+          bottom: 75px;
+          left: -10px;
+          background-color: #fff;
+          color: #000;
+          padding: 10px 14px;
+          border: 4px solid #000;
+          font-family: 'Courier New', monospace;
+          font-weight: bold;
+          font-size: 0.8rem;
+          white-space: nowrap;
+          box-shadow: 6px 6px 0px rgba(0,0,0,0.4);
+          pointer-events: none;
+          z-index: 1001;
+          animation: floatHint 2s ease-in-out infinite;
+          text-shadow: none;
+        }
+        .gift-hint::after {
+           content: "";
+           position: absolute;
+           bottom: -12px;
+           left: 25px;
+           width: 0; 
+           height: 0; 
+           border-left: 10px solid transparent;
+           border-right: 10px solid transparent;
+           border-top: 12px solid #000;
+        }
+        .gift-hint::before {
+           content: "";
+           position: absolute;
+           bottom: -6px;
+           left: 27px;
+           width: 0; 
+           height: 0; 
+           border-left: 8px solid transparent;
+           border-right: 8px solid transparent;
+           border-top: 10px solid #fff;
+           z-index: 1;
+        }
+
+        @keyframes floatHint {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
+        }
       `}</style>
 
 
@@ -343,7 +568,7 @@ export default function Home() {
             sizes="100vw"
             priority
             style={{
-              width: "clamp(200px, 40vw, 450px)",
+              width: "clamp(200px, 30vw, 400px)",
               height: "auto",
               imageRendering: "pixelated",
               objectFit: "contain",
@@ -355,9 +580,10 @@ export default function Home() {
 
       {/* Save The Date & Details - Scrolls with page */}
       <div
+        className="content-responsive"
         style={{
           position: "relative",
-          marginTop: "30vh", // Positioned below initial balloon view
+          // marginTop handled by css
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 20, // High z-index to stay on top
@@ -674,72 +900,12 @@ export default function Home() {
 
           <CoupleStory />
 
-          <WeddingLocation />
 
-          {/* KPAY GIFT SECTION */}
-          <div
-            ref={weddingGiftRef}
-            style={{
-              marginTop: "20px",
-              backgroundColor: "rgba(255, 255, 255, 0.95)",
-              border: "4px solid #2c3e50", // Dark blue border
-              borderRadius: "12px",
-              boxShadow: "6px 6px 0 rgba(44, 62, 80, 0.3)",
-              padding: "30px",
-              pointerEvents: "auto",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "90%",
-              maxWidth: "500px", // Slightly smaller
-              marginLeft: "auto",
-              marginRight: "auto",
-              position: "relative",
-              zIndex: 30,
-              transform: showWeddingGift ? "scale(1) translateY(0)" : "scale(0.8) translateY(100px)",
-              opacity: showWeddingGift ? 1 : 0,
-              transition: "transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease-out"
-            }}>
-            <h2 style={{
-              fontFamily: "'Press Start 2P', system-ui",
-              marginBottom: "15px",
-              fontSize: "1.1rem",
-              textAlign: "center",
-              lineHeight: "1.5",
-              color: "#2c3e50",
-              textShadow: "2px 2px 0 #bdc3c7"
-            }}>
-              WEDDING GIFT
-            </h2>
 
-            <p style={{
-              fontFamily: "'Courier New', monospace",
-              textAlign: "center",
-              marginBottom: "20px",
-              fontSize: "0.9rem",
-              color: "#2c3e50"
-            }}>
-              Scan to contribute via KPay
-            </p>
 
-            <div style={{
-              border: "2px solid #2c3e50",
-              padding: "8px",
-              backgroundColor: "white",
-              boxShadow: "4px 4px 0 rgba(44, 62, 80, 0.1)"
-            }}>
-              <Image
-                src="/kpay.jpg"
-                alt="KBZ Pay"
-                width={180}
-                height={180}
-                style={{
-                  imageRendering: "pixelated",
-                  objectFit: "contain"
-                }}
-              />
-            </div>
-          </div>
+
+
+
 
 
 
@@ -768,6 +934,7 @@ export default function Home() {
               opacity: showThankYou ? 1 : 0,
               transition: "transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease-out"
             }}>
+
             <div style={{ marginBottom: "15px", display: "flex", justifyContent: "center" }}>
               <Image
                 src="/great.gif"
@@ -798,12 +965,23 @@ export default function Home() {
               မင်္ဂလာပွဲအားကြွရောက်ပေးတဲ့အတွက်အထူးကျေးဇူးတင်ပါသည်
             </p>
 
+            <div style={{ marginTop: "25px" }}>
+              <button onClick={handleSendLove} className="pixel-btn">
+                SEND LOVE ❤️
+              </button>
+            </div>
+
           </div>
 
 
 
 
-          <div style={{ height: "200px" }}></div>
+          <div style={{ height: "50px" }}></div>
+
+          {/* Action Buttons Container */}
+
+
+
 
           {/* FOOTER IMAGE */}
           <div style={{
@@ -874,9 +1052,110 @@ export default function Home() {
               <span style={{ color: msg.color, textTransform: "uppercase" }}>{msg.name}</span>
               <div style={{ fontSize: "0.8rem", marginTop: "4px" }}>{msg.message}</div>
             </div>
+
+            {/* Balloon String */}
+            <div style={{
+              width: "2px",
+              height: "40px",
+              backgroundColor: "rgba(255,255,255,0.6)",
+              marginTop: "-2px"
+            }} />
+
+            {/* Balloon */}
+            <div style={{
+              width: "40px",
+              height: "50px",
+              background: `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), ${msg.color})`,
+              borderRadius: "50% 50% 50% 50% / 40% 40% 60% 60%",
+              boxShadow: "inset -5px -5px 10px rgba(0,0,0,0.1)",
+              position: "relative"
+            }}>
+              {/* Knot */}
+              <div style={{
+                position: "absolute",
+                bottom: "-4px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: "6px",
+                height: "6px",
+                backgroundColor: msg.color,
+                borderRadius: "50%"
+              }} />
+            </div>
           </div>
         ))}
       </div>
+
+      {/* 4. Render LocationModal and the floating button */}
+      <LocationModal isOpen={showLocationModal} onClose={() => setShowLocationModal(false)} />
+      <GiftModal isOpen={showGiftModal} onClose={() => setShowGiftModal(false)} />
+
+      <div
+        className="location-icon-btn"
+        onClick={() => setShowLocationModal(true)}
+        title="See Wedding Location"
+        style={{
+          opacity: showLocationIcon ? 1 : 0,
+          pointerEvents: showLocationIcon ? "auto" : "none",
+          transform: showLocationIcon ? "scale(1)" : "scale(0.8)",
+          transition: "opacity 0.3s ease-in-out, transform 0.3s ease-in-out"
+        }}
+      >
+        <div
+          className="location-hint"
+          style={{
+            bottom: "75px",
+            // The icon is on the LEFT, so tooltip should align to its left, 
+            // but since it's at the screen edge, maybe push it right a bit?
+            // Actually let's keep it centered or stick to left edge.
+            left: "-10px",
+            opacity: showLocationTooltip ? 1 : 0,
+            transition: "opacity 0.3s ease-in-out",
+            pointerEvents: "none"
+          }}
+        >
+          မင်္ဂလာပွဲလိပ်စာကြည့်ရန်
+        </div>
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="#ec008c" xmlns="http://www.w3.org/2000/svg" style={{ imageRendering: "pixelated" }}>
+          <path d="M10 2H14V4H16V6H18V10H16V12H14V14H12V16H14V18H12V22H10V16H8V14H6V12H4V10H6V6H8V4H10V2ZM10 6H8V10H10V6ZM14 6H12V10H14V6Z" />
+        </svg>
+      </div>
+
+
+      <div
+        className="gift-icon-btn"
+        onClick={() => setShowGiftModal(true)}
+        title="Send Wedding Gift"
+        style={{
+          opacity: showLocationIcon ? 1 : 0,
+          pointerEvents: showLocationIcon ? "auto" : "none",
+          transform: showLocationIcon ? "scale(1)" : "scale(0.8)",
+          transition: "opacity 0.3s ease-in-out, transform 0.3s ease-in-out"
+        }}
+      >
+        <div
+          className="location-hint"
+          style={{
+            bottom: "75px",
+            right: "-10px",
+            opacity: showLocationTooltip ? 1 : 0,
+            transition: "opacity 0.3s ease-in-out",
+            pointerEvents: "none"
+          }}
+        >
+          မင်္ဂလာလက်ဖွဲ့ပေးရန်
+        </div>
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="#E91E63" xmlns="http://www.w3.org/2000/svg" style={{ imageRendering: "pixelated" }}>
+          <path d="M4 4H10V6H4V4ZM14 4H20V6H14V4ZM4 8H20V10H4V8ZM4 12H20V20H4V12ZM11 12H13V20H11V12ZM6 12H9V14H6V12ZM15 12H18V14H15V12Z" />
+          <path d="M8 2H10V4H8V2ZM14 2H16V4H14V2Z" />
+        </svg>
+      </div>
+
+
+
+
+
+
 
     </div >
   );
